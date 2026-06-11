@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // Load environment variables from .env
 dotenv.config();
@@ -10,29 +12,81 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// Use Helmet for secure HTTP headers (disable CSP to avoid issues with local Vite HMR and fonts)
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
+
+// Configure safe CORS domains (Local Dev + Render Subdomains)
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://carbon-footprint-gceh.onrender.com'
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    // Allow standard local dev and onrender.com subdomains
+    if (allowedOrigins.includes(origin) || origin.endsWith('.onrender.com') || origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'), false);
+  }
+}));
+
 app.use(express.json());
+
+// API Rate Limiting to prevent brute-forcing/abusing the Gemini API key
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { error: 'Too many API requests from this IP, please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/ai-insights', limiter);
 
 // API route for AI insights
 app.post('/api/ai-insights', async (req, res) => {
   const { footprint, inputs, loggedSavingsKg, totalOffsetsTons } = req.body;
 
+  // Validate parameters presence and types
+  if (!footprint || typeof footprint.total !== 'number') {
+    return res.status(400).json({ error: 'Missing or invalid footprint data.' });
+  }
+  if (!inputs || typeof inputs.dietType !== 'string' || typeof inputs.shoppingLevel !== 'string') {
+    return res.status(400).json({ error: 'Missing or invalid input selections.' });
+  }
+  if (typeof loggedSavingsKg !== 'number' || typeof totalOffsetsTons !== 'number') {
+    return res.status(400).json({ error: 'Missing or invalid numeric metrics.' });
+  }
+
+  // Sanitize parameter strings to prevent command/prompt injections
+  const cleanDiet = inputs.dietType.substring(0, 50).replace(/[^\w\s-]/g, '');
+  const cleanFuel = (inputs.fuelType || '').substring(0, 50).replace(/[^\w\s-]/g, '');
+  const cleanCarSize = (inputs.carSize || '').substring(0, 50).replace(/[^\w\s-]/g, '');
+  const cleanHeatingFuel = (inputs.heatingFuel || '').substring(0, 50).replace(/[^\w\s-]/g, '');
+  const cleanShopping = inputs.shoppingLevel.substring(0, 50).replace(/[^\w\s-]/g, '');
+  const cleanRecycling = (inputs.recyclingLevel || '').substring(0, 50).replace(/[^\w\s-]/g, '');
+
   const apiKey = process.env.GEMINI_API_KEY;
 
   // Clean up key if it is the placeholder
   if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
-    return res.status(400).json({
-      error: 'GEMINI_API_KEY is not defined in the backend .env file. Please paste your key from Google AI Studio in the .env file.'
+    return res.status(400).json({ 
+      error: 'GEMINI_API_KEY is not defined in the backend .env file. Please paste your key from Google AI Studio in the .env file.' 
     });
   }
 
   const promptText = `You are TerraTrace AI, a sustainability consultant. Analyze this user's carbon footprint profile and provide 3 highly actionable, personalized sustainability tips.
 Profile Details:
 - Total Footprint: ${footprint.total} tons CO2e/year.
-- Transport: ${footprint.transport} tons/year (Mileage: ${inputs.drivingDist}km/week, fuel: ${inputs.fuelType}, size: ${inputs.carSize}; transit: ${inputs.transitDist}km/week; flights: ${inputs.flightHours} hrs/yr).
-- Housing: ${footprint.housing} tons/year (bill: $${inputs.electricBill}/mo, heating: ${inputs.heatingFuel}, renewable electricity: ${inputs.renewableElectricity}).
-- Diet: ${inputs.dietType}.
-- Consumption: ${inputs.shoppingLevel} shopping level, ${inputs.recyclingLevel} recycling level.
+- Transport: ${footprint.transport} tons/year (Mileage: ${inputs.drivingDist}km/week, fuel: ${cleanFuel}, size: ${cleanCarSize}; transit: ${inputs.transitDist}km/week; flights: ${inputs.flightHours} hrs/yr).
+- Housing: ${footprint.housing} tons/year (bill: $${inputs.electricBill}/mo, heating: ${cleanHeatingFuel}, renewable electricity: ${inputs.renewableElectricity}).
+- Diet: ${cleanDiet}.
+- Consumption: ${cleanShopping} shopping level, ${cleanRecycling} recycling level.
 - Saved so far: ${loggedSavingsKg} kg.
 - Offsets: ${totalOffsetsTons} tons.
 
@@ -108,6 +162,10 @@ app.get('*all', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`TerraTrace backend listening on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`TerraTrace backend listening on port ${PORT}`);
+  });
+}
+
+export default app;

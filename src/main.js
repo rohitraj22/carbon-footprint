@@ -1055,10 +1055,10 @@ function renderOffsetsView(remainingFootprint, totalOffsetsTons, netFootprint) {
       <div>
         <div class="divider opacity-10 mb-3"></div>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="font-size-xs text-secondary">Purchase simulated credits</span>
+          <label for="slider-${project.id}" class="font-size-xs text-secondary">Purchase simulated credits</label>
           <span class="font-outfit fw-extrabold text-cyan font-size-sm">${purchasedValue.toFixed(1)} Tons</span>
         </div>
-        <input type="range" class="form-range w-100 offset-slider" data-proj-id="${project.id}" min="0" max="10" step="0.5" value="${purchasedValue}">
+        <input type="range" id="slider-${project.id}" class="form-range w-100 offset-slider" data-proj-id="${project.id}" min="0" max="10" step="0.5" value="${purchasedValue}">
         <div class="d-flex justify-content-between font-size-xs text-secondary mt-1">
           <span>0T</span>
           <span>Cost: <strong class="text-light">$${(purchasedValue * project.costPerTon).toFixed(0)}</strong></span>
@@ -1382,4 +1382,7 @@ Your **Lifestyle & Buying Habits** (${footprint.consumption.toFixed(1)} T CO₂e
     }
   }, 8);
 }
+
+// Exports for unit testing
+export { calculateCarbonFootprint, calculateStreak, state };
 

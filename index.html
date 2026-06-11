@@ -83,7 +83,7 @@
       <!-- Top Header -->
       <header class="main-header d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 class="font-outfit fw-bold text-light mb-1" id="greeting-title">Hello, Earthling</h2>
+          <h1 class="font-outfit fw-bold text-light mb-1" id="greeting-title">Hello, Earthling</h1>
           <p class="text-secondary font-size-sm mb-0">Let's track and balance your footprint today.</p>
         </div>
         <div class="header-actions d-flex gap-3 align-items-center">
@@ -95,8 +95,8 @@
             <span class="pulse-indicator"></span>
             <span class="font-size-sm text-secondary font-jakarta"><b class="text-light" id="total-saved-pill">0</b> kg Saved</span>
           </div>
-          <button class="btn btn-secondary btn-icon-wrap" id="recalc-btn" title="Recalculate Carbon Footprint">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <button class="btn btn-secondary btn-icon-wrap" id="recalc-btn" title="Recalculate Carbon Footprint" aria-label="Recalculate Carbon Footprint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
             <span class="d-none d-md-inline ms-2">Recalculate</span>
           </button>
         </div>
@@ -170,7 +170,7 @@
               <!-- Relatable Savings Projection Tool -->
               <div class="projection-tool-wrap mb-3">
                 <div class="d-flex justify-content-between font-size-xs text-secondary mb-2">
-                  <span>Project savings over:</span>
+                  <label for="projection-slider">Project savings over:</label>
                   <span class="text-emerald fw-bold" id="val-projection-years">5 Years</span>
                 </div>
                 <input type="range" class="form-range w-100" id="projection-slider" min="1" max="25" step="1" value="5">
@@ -192,7 +192,7 @@
           <div class="glass-panel p-4 card-hover d-flex flex-column justify-content-between col-span-2">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h4 class="font-outfit fw-semibold text-secondary mb-0">How You Stack Up</h4>
-              <select class="form-select bg-dark-deep border-secondary text-light font-size-xs px-2 py-1 rounded-lg cursor-pointer" id="country-compare-select" style="width: auto; height: 32px;">
+              <select class="form-select bg-dark-deep border-secondary text-light font-size-xs px-2 py-1 rounded-lg cursor-pointer" id="country-compare-select" style="width: auto; height: 32px;" aria-label="Compare with country carbon footprint">
                 <option value="US">United States</option>
                 <option value="DE">Germany</option>
                 <option value="UK">United Kingdom</option>
@@ -323,7 +323,7 @@
 
               <div id="log-options-container" class="mt-2">
                 <!-- Dropdown populated dynamically based on category selection -->
-                <label class="form-label text-secondary font-size-sm mb-2">Sustainable Activity Description</label>
+                <label for="log-activity-select" class="form-label text-secondary font-size-sm mb-2">Sustainable Activity Description</label>
                 <select class="form-select w-100 p-3 bg-dark-deep border-secondary rounded-lg text-light font-jakarta" id="log-activity-select">
                   <!-- Injected via js -->
                 </select>
@@ -478,14 +478,14 @@
             <!-- Sub-Category: Vehicle -->
             <div>
               <div class="d-flex justify-content-between mb-2">
-                <label class="form-label text-light font-size-sm">Weekly Personal Driving</label>
+                <label for="onboard-driving-dist" class="form-label text-light font-size-sm">Weekly Personal Driving</label>
                 <span class="text-cyan font-size-sm fw-semibold" id="val-driving-dist">100 km</span>
               </div>
               <input type="range" class="form-range w-100" id="onboard-driving-dist" min="0" max="1000" step="10" value="100">
               
               <div class="grid-2 gap-2 mt-2">
                 <div>
-                  <label class="form-label text-secondary font-size-xs">Fuel/Engine Type</label>
+                  <label for="onboard-fuel-type" class="form-label text-secondary font-size-xs">Fuel/Engine Type</label>
                   <select class="form-select w-100 bg-dark-deep border-secondary p-2 rounded-lg text-light font-size-sm" id="onboard-fuel-type">
                     <option value="petrol">Petrol (Gasoline)</option>
                     <option value="diesel">Diesel</option>
@@ -494,7 +494,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="form-label text-secondary font-size-xs">Car Size</label>
+                  <label for="onboard-car-size" class="form-label text-secondary font-size-xs">Car Size</label>
                   <select class="form-select w-100 bg-dark-deep border-secondary p-2 rounded-lg text-light font-size-sm" id="onboard-car-size">
                     <option value="medium">Medium Sedan</option>
                     <option value="small">Compact hatchback</option>
@@ -507,7 +507,7 @@
             <!-- Sub-Category: Transit -->
             <div>
               <div class="d-flex justify-content-between mb-2">
-                <label class="form-label text-light font-size-sm">Weekly Public Transit (Bus, Train)</label>
+                <label for="onboard-transit-dist" class="form-label text-light font-size-sm">Weekly Public Transit (Bus, Train)</label>
                 <span class="text-cyan font-size-sm fw-semibold" id="val-transit-dist">20 km</span>
               </div>
               <input type="range" class="form-range w-100" id="onboard-transit-dist" min="0" max="500" step="5" value="20">
@@ -516,7 +516,7 @@
             <!-- Sub-Category: Flights -->
             <div>
               <div class="d-flex justify-content-between mb-2">
-                <label class="form-label text-light font-size-sm">Annual Air Travel (Flight Hours)</label>
+                <label for="onboard-flight-hours" class="form-label text-light font-size-sm">Annual Air Travel (Flight Hours)</label>
                 <span class="text-cyan font-size-sm fw-semibold" id="val-flight-hours">4 hours</span>
               </div>
               <input type="range" class="form-range w-100" id="onboard-flight-hours" min="0" max="100" step="1" value="4">
@@ -538,7 +538,7 @@
             <!-- Household Members -->
             <div>
               <label class="form-label text-light font-size-sm mb-2">Number of people in your household</label>
-              <div class="d-flex gap-2" id="household-size-selector">
+              <div class="d-flex gap-2" id="household-size-selector" role="group" aria-label="Number of people in household">
                 <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge active" data-size="1">1 (Single)</button>
                 <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge" data-size="2">2</button>
                 <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge" data-size="3">3</button>
@@ -549,7 +549,7 @@
             <!-- Energy usage -->
             <div>
               <div class="d-flex justify-content-between mb-2">
-                <label class="form-label text-light font-size-sm">Monthly Electricity Bill ($)</label>
+                <label for="onboard-electric-bill" class="form-label text-light font-size-sm">Monthly Electricity Bill ($)</label>
                 <span class="text-cyan font-size-sm fw-semibold" id="val-electric-bill">$60</span>
               </div>
               <input type="range" class="form-range w-100" id="onboard-electric-bill" min="0" max="500" step="5" value="60">
@@ -562,7 +562,7 @@
 
             <!-- Heating Fuel -->
             <div>
-              <label class="form-label text-light font-size-sm mb-2">Primary Heating Source</label>
+              <label for="onboard-heating-fuel" class="form-label text-light font-size-sm mb-2">Primary Heating Source</label>
               <select class="form-select w-100 bg-dark-deep border-secondary p-3 rounded-lg text-light font-jakarta font-size-sm" id="onboard-heating-fuel">
                 <option value="gas">Natural Gas</option>
                 <option value="electric">Electricity (Heat Pump/Electric Radiators)</option>
@@ -583,7 +583,7 @@
           <h3 class="font-outfit fw-bold text-light mb-2">Diet & Food Habits</h3>
           <p class="text-secondary font-size-sm mb-4">Food production, especially beef and dairy, has a massive carbon impact.</p>
           
-          <div class="d-flex flex-column gap-3">
+          <div class="d-flex flex-column gap-3" role="radiogroup" aria-label="Diet description">
             <label class="form-label text-light font-size-sm mb-2">Which best describes your daily diet?</label>
             
             <div class="diet-option-card glass-panel-sm p-3 d-flex align-items-center gap-3 active" data-diet="heavy-meat">
@@ -633,7 +633,7 @@
           <div class="d-flex flex-column gap-4">
             <!-- Shopping Intensity -->
             <div>
-              <label class="form-label text-light font-size-sm mb-2">How frequently do you buy new goods (clothes, electronics, furniture)?</label>
+              <label for="onboard-shopping-level" class="form-label text-light font-size-sm mb-2">How frequently do you buy new goods (clothes, electronics, furniture)?</label>
               <select class="form-select w-100 bg-dark-deep border-secondary p-3 rounded-lg text-light font-jakarta font-size-sm" id="onboard-shopping-level">
                 <option value="average">Average (Occasional purchases when needed)</option>
                 <option value="low">Minimalist (Very rarely buy new, prefer secondhand)</option>
@@ -643,7 +643,7 @@
 
             <!-- Recycling -->
             <div>
-              <label class="form-label text-light font-size-sm mb-2">What is your household recycling habit?</label>
+              <label for="onboard-recycling-level" class="form-label text-light font-size-sm mb-2">What is your household recycling habit?</label>
               <select class="form-select w-100 bg-dark-deep border-secondary p-3 rounded-lg text-light font-jakarta font-size-sm" id="onboard-recycling-level">
                 <option value="some">Recycle some materials (paper, cans)</option>
                 <option value="most">Recycle almost everything (glass, plastic, paper, compost)</option>
@@ -673,8 +673,8 @@
           </div>
           <h3 class="font-outfit fw-bold text-light mb-0">TerraTrace AI Consultation</h3>
         </div>
-        <button class="btn btn-outline-secondary p-1 rounded-full border-none" id="close-ai-modal-btn">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        <button class="btn btn-outline-secondary p-1 rounded-full border-none" id="close-ai-modal-btn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
 

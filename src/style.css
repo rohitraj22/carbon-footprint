@@ -361,7 +361,8 @@ body {
 .tracking-wide { letter-spacing: 0.02em; }
 .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-h2 { font-size: 1.85rem; letter-spacing: -0.01em; }
+h1 { font-size: 1.85rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.65rem; letter-spacing: -0.01em; }
 h3 { font-size: 1.45rem; }
 h4 { font-size: 1.1rem; }
 h5 { font-size: 0.95rem; }

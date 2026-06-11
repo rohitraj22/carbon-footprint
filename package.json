@@ -8,13 +8,21 @@
     "frontend": "vite",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "vite": "^5.0.0"
+    "jsdom": "^29.1.1",
+    "supertest": "^7.2.2",
+    "vite": "^5.0.0",
+    "vitest": "^4.1.8"
+  },
+  "dependencies": {
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0"
   }
 }
