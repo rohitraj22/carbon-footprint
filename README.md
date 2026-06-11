@@ -1,5 +1,7 @@
 # 🌍 TerraTrace — Premium Carbon Footprint Tracker
 
+**Live Application**: [carbon-footprint-gceh.onrender.com](https://carbon-footprint-gceh.onrender.com/)
+
 TerraTrace is a high-fidelity, single-page web application designed to help individuals calculate, track, and offset their operational carbon footprint. Featuring beautiful glassmorphic widgets, a real-time global carbon clock, gamified habit logs, and personalized AI carbon audits powered by Google Gemini, TerraTrace is a premium carbon companion.
 
 ---
