@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TerraTrace — Premium Carbon Footprint Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body class="bg-dark text-light">
+  <!-- Glowing Background Ambient Spheres -->
+  <div class="ambient-glow sphere-1"></div>
+  <div class="ambient-glow sphere-2"></div>
+  <div class="ambient-glow sphere-3"></div>
+
+  <!-- App Wrapper -->
+  <div class="app-container d-flex">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar glass-panel d-flex flex-column justify-content-between">
+      <div class="sidebar-top">
+        <!-- Brand Logo -->
+        <div class="brand d-flex align-items-center gap-3">
+          <div class="logo-icon-wrap">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.58 1 8a7 7 0 0 1-7 7H11z" fill="url(#leafGrad)" fill-opacity="0.25" />
+              <path d="M9 22v-3h3" />
+              <defs>
+                <linearGradient id="brandGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#10B981" />
+                  <stop offset="1" stop-color="#06B6D4" />
+                </linearGradient>
+                <linearGradient id="leafGrad" x1="12" y1="2" x2="12" y2="20" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#10B981" />
+                  <stop offset="1" stop-color="#84CC16" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="brand-name font-outfit fw-bold tracking-wide">TerraTrace</span>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="nav flex-column gap-2 mt-5">
+          <button class="nav-link active d-flex align-items-center gap-3" data-target="dashboard">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-link d-flex align-items-center gap-3" data-target="actions">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.488 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Action Hub</span>
+          </button>
+          <button class="nav-link d-flex align-items-center gap-3" data-target="logger">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span>Daily Log</span>
+          </button>
+          <button class="nav-link d-flex align-items-center gap-3" data-target="offsets">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>Offsets & Net-Zero</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- User Info Badge / Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="profile-card d-flex align-items-center gap-3 glass-panel-sm p-3">
+          <div class="profile-avatar font-outfit fw-bold">E</div>
+          <div class="profile-details overflow-hidden">
+            <h5 class="profile-name mb-0 font-outfit truncate">Eco Warrior</h5>
+            <span class="badge badge-primary py-1 px-2 font-size-xs" id="eco-rank-badge">Green Novice</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-wrapper flex-grow-1 p-4">
+      
+      <!-- Top Header -->
+      <header class="main-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="font-outfit fw-bold text-light mb-1" id="greeting-title">Hello, Earthling</h2>
+          <p class="text-secondary font-size-sm mb-0">Let's track and balance your footprint today.</p>
+        </div>
+        <div class="header-actions d-flex gap-3 align-items-center">
+          <div class="stats-pill glass-panel-sm px-3 py-2 d-flex align-items-center gap-2 live-carbon-pill">
+            <span class="pulse-indicator-rose animate-pulse"></span>
+            <span class="font-size-xs text-secondary font-jakarta">Global CO₂ today: <b class="text-rose font-outfit fw-bold" id="global-co2-clock">0.00</b> T</span>
+          </div>
+          <div class="stats-pill glass-panel-sm px-3 py-2 d-flex align-items-center gap-2">
+            <span class="pulse-indicator"></span>
+            <span class="font-size-sm text-secondary font-jakarta"><b class="text-light" id="total-saved-pill">0</b> kg Saved</span>
+          </div>
+          <button class="btn btn-secondary btn-icon-wrap" id="recalc-btn" title="Recalculate Carbon Footprint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span class="d-none d-md-inline ms-2">Recalculate</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW: DASHBOARD -->
+      <section id="view-dashboard" class="content-view active">
+        <!-- 3-Column Top Grid -->
+        <div class="grid-3 gap-4 mb-4">
+          <!-- Footprint Circular Gauge -->
+          <div class="glass-panel p-4 d-flex flex-column align-items-center justify-content-between text-center relative overflow-hidden card-hover">
+            <h4 class="font-outfit fw-semibold w-100 text-start text-secondary mb-3">Annual Carbon Score</h4>
+            <div class="gauge-wrapper relative">
+              <svg class="progress-ring" width="200" height="200">
+                <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="12" fill="transparent" r="82" cx="100" cy="100"/>
+                <circle class="progress-ring-circle" id="dashboard-gauge" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round" fill="transparent" r="82" cx="100" cy="100" stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
+                <defs>
+                  <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#10B981" />
+                    <stop offset="50%" stop-color="#3B82F6" />
+                    <stop offset="100%" stop-color="#F43F5E" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="gauge-center d-flex flex-column align-items-center justify-content-center">
+                <span class="gauge-value font-outfit fw-extrabold" id="gauge-score">0.0</span>
+                <span class="gauge-label text-secondary font-jakarta font-size-xs">Tons CO₂e / Year</span>
+              </div>
+            </div>
+            <div class="gauge-footer w-100 mt-2 d-flex justify-content-between text-secondary font-size-xs">
+              <span>Goal: <strong class="text-emerald">2.0 T</strong></span>
+              <span id="gauge-status-desc">Calculating...</span>
+              <span id="gauge-country-compare">US Avg: <strong class="text-rose">16.0 T</strong></span>
+            </div>
+          </div>
+
+          <!-- Dynamic SVG Doughnut Chart for Categories -->
+          <div class="glass-panel p-4 d-flex flex-column justify-content-between card-hover">
+            <h4 class="font-outfit fw-semibold text-secondary mb-2">Footprint Breakdown</h4>
+            <div class="d-flex align-items-center gap-3 h-100 py-2">
+              <div class="chart-container relative" style="width: 140px; height: 140px;">
+                <svg id="category-donut-chart" viewBox="0 0 36 36" class="donut-chart" style="transform: rotate(-90deg);">
+                  <!-- Dynamic SVG segments added via javascript -->
+                </svg>
+                <div class="chart-center d-flex align-items-center justify-content-center">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-secondary opacity-60"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                </div>
+              </div>
+              <div class="legend flex-grow-1 d-flex flex-column gap-2" id="chart-legend">
+                <!-- Legend items injected via javascript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats & Climate Equivalency Card -->
+          <div class="glass-panel p-4 d-flex flex-column justify-content-between relative overflow-hidden card-hover">
+            <div class="decoration-blur-bg bg-emerald opacity-20"></div>
+            <div>
+              <h4 class="font-outfit fw-semibold text-secondary mb-3">Your Eco Impact</h4>
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="impact-badge bg-emerald-glow p-2 rounded-lg">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24" class="text-emerald"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.488 2 12s4.477 10 10 10z"/><path d="M12 6v12M8 10h8"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-outfit fw-bold mb-0" id="impact-co2-saved">0 kg</h3>
+                  <p class="text-secondary font-size-xs mb-0">Total CO₂e prevented</p>
+                </div>
+              </div>
+              <div class="divider opacity-10 my-3"></div>
+              
+              <!-- Relatable Savings Projection Tool -->
+              <div class="projection-tool-wrap mb-3">
+                <div class="d-flex justify-content-between font-size-xs text-secondary mb-2">
+                  <span>Project savings over:</span>
+                  <span class="text-emerald fw-bold" id="val-projection-years">5 Years</span>
+                </div>
+                <input type="range" class="form-range w-100" id="projection-slider" min="1" max="25" step="1" value="5">
+              </div>
+
+              <p class="font-size-xs text-light font-jakarta mb-2 leading-relaxed" id="equivalency-text">
+                Your daily choices prevent emissions. Log activities or commit to challenges to reduce your footprint!
+              </p>
+            </div>
+            <div class="impact-visualizer-container" id="impact-visualizer">
+              <!-- Visual equivalency (e.g. tree icon row) -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Middle Grid -->
+        <div class="grid-3 gap-4 mb-4" id="dashboard-bottom-row">
+          <!-- Footprint Comparison Bar Meter -->
+          <div class="glass-panel p-4 card-hover d-flex flex-column justify-content-between col-span-2">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="font-outfit fw-semibold text-secondary mb-0">How You Stack Up</h4>
+              <select class="form-select bg-dark-deep border-secondary text-light font-size-xs px-2 py-1 rounded-lg cursor-pointer" id="country-compare-select" style="width: auto; height: 32px;">
+                <option value="US">United States</option>
+                <option value="DE">Germany</option>
+                <option value="UK">United Kingdom</option>
+                <option value="CN">China</option>
+                <option value="IN">India</option>
+                <option value="BR">Brazil</option>
+                <option value="GL">Global Average</option>
+              </select>
+            </div>
+            
+            <div class="comparison-bars d-flex flex-column justify-content-between h-100 py-1 gap-3">
+              <!-- Bar 1: User -->
+              <div class="comparison-bar-item">
+                <div class="d-flex justify-content-between font-size-sm mb-2">
+                  <span class="fw-semibold text-light">Your Carbon Footprint</span>
+                  <span class="text-cyan fw-bold" id="compare-user-value">0.0 T CO₂e</span>
+                </div>
+                <div class="progress-bar-wrap bg-dark-deep rounded-full overflow-hidden">
+                  <div class="progress-bar bg-gradient-cyan-blue" id="compare-user-bar" style="width: 0%"></div>
+                </div>
+              </div>
+              <!-- Bar 2: Target (Global Sustainable Goal) -->
+              <div class="comparison-bar-item">
+                <div class="d-flex justify-content-between font-size-sm mb-2">
+                  <span class="fw-semibold text-light">Climate Safe Target</span>
+                  <span class="text-emerald fw-bold">2.0 T CO₂e</span>
+                </div>
+                <div class="progress-bar-wrap bg-dark-deep rounded-full overflow-hidden">
+                  <div class="progress-bar bg-gradient-emerald" style="width: 12.5%"></div>
+                </div>
+              </div>
+              <!-- Bar 3: National / Selected Country Average -->
+              <div class="comparison-bar-item">
+                <div class="d-flex justify-content-between font-size-sm mb-2">
+                  <span class="fw-semibold text-light" id="compare-country-label">US National Average</span>
+                  <span class="text-rose fw-bold" id="compare-country-value">16.0 T CO₂e</span>
+                </div>
+                <div class="progress-bar-wrap bg-dark-deep rounded-full overflow-hidden">
+                  <div class="progress-bar bg-gradient-rose" id="compare-country-bar" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart Action Recommender -->
+          <div class="glass-panel p-4 card-hover relative overflow-hidden d-flex flex-column">
+            <div class="decoration-blur-bg bg-cyan opacity-10" style="bottom: -20px; right: -20px;"></div>
+            <div>
+              <h4 class="font-outfit fw-semibold text-secondary mb-3">TerraTrace AI Assistant</h4>
+              <div class="d-flex gap-3">
+                <div class="insight-icon-container bg-cyan-glow p-2 rounded-lg align-self-start">
+                  <svg class="ai-sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24" class="text-cyan"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </div>
+                <div>
+                  <h5 class="font-outfit fw-semibold text-light mb-1" id="insight-title">TerraTrace AI Consultation</h5>
+                  <p class="text-secondary font-size-xs leading-relaxed mb-0" id="insight-text">
+                    Our advanced AI assistant evaluates your entire carbon footprint across transport, housing, diet, and lifestyle to formulate a personalized, high-impact emission reduction strategy.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary w-100 mt-auto" id="insight-action-btn">Start AI Consultation</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: ACTIONS (ACTION HUB) -->
+      <section id="view-actions" class="content-view">
+        <div class="glass-panel p-4 mb-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <h3 class="font-outfit fw-bold text-light mb-1">Carbon Reduction Commitments</h3>
+              <p class="text-secondary font-size-sm mb-0">Commit to long-term adjustments and watch your annual score drop.</p>
+            </div>
+            <!-- Category Filters -->
+            <div class="filter-tabs d-flex gap-2 p-1 bg-dark-deep rounded-lg align-self-start">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="energy">Energy</button>
+              <button class="filter-btn" data-filter="transport">Transport</button>
+              <button class="filter-btn" data-filter="food">Food</button>
+              <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
+            </div>
+          </div>
+
+          <!-- Actions Grid -->
+          <div class="grid-3 gap-3" id="actions-grid">
+            <!-- Dynamic Action cards injected via javascript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: DAILY LOG -->
+      <section id="view-logger" class="content-view">
+        <div class="grid-3 gap-4" id="logger-row">
+          <!-- Logger Panel -->
+          <div class="glass-panel p-4 d-flex flex-column justify-content-between col-span-2">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h3 class="font-outfit fw-bold text-light mb-0">Log Daily Eco Activities</h3>
+              <div class="stats-pill glass-panel-sm px-3 py-1 d-flex align-items-center gap-2">
+                <span class="font-size-xs text-amber font-outfit fw-bold">🔥 Streak: <span id="streak-counter-val">0</span> days</span>
+              </div>
+            </div>
+            <p class="text-secondary font-size-sm mb-4">Every day, add logs for sustainable choices to see immediate carbon reductions.</p>
+            
+            <form id="daily-log-form" class="d-flex flex-column justify-content-between h-100 gap-3">
+              <div>
+                <label class="form-label text-secondary font-size-sm mb-2">Sustainable Action Category</label>
+                <div class="grid-2 gap-2" id="log-categories-grid">
+                  <!-- Injected selector options -->
+                  <button type="button" class="btn btn-outline-secondary log-cat-btn d-flex flex-column align-items-center gap-2 p-3 text-start active" data-log-cat="food">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" class="text-emerald"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span class="font-size-sm">Diet & Meals</span>
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary log-cat-btn d-flex flex-column align-items-center gap-2 p-3 text-start" data-log-cat="transport">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" class="text-cyan"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                    <span class="font-size-sm">Travel & Transit</span>
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary log-cat-btn d-flex flex-column align-items-center gap-2 p-3 text-start" data-log-cat="energy">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" class="text-amber"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    <span class="font-size-sm">Home & Energy</span>
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary log-cat-btn d-flex flex-column align-items-center gap-2 p-3 text-start" data-log-cat="lifestyle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" class="text-purple"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    <span class="font-size-sm">Lifestyle & Waste</span>
+                  </button>
+                </div>
+              </div>
+
+              <div id="log-options-container" class="mt-2">
+                <!-- Dropdown populated dynamically based on category selection -->
+                <label class="form-label text-secondary font-size-sm mb-2">Sustainable Activity Description</label>
+                <select class="form-select w-100 p-3 bg-dark-deep border-secondary rounded-lg text-light font-jakarta" id="log-activity-select">
+                  <!-- Injected via js -->
+                </select>
+              </div>
+
+              <div class="d-flex gap-3 mt-auto">
+                <button type="submit" class="btn btn-primary flex-grow-1 p-3">Submit Daily Log</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- History / Daily Logs Feed -->
+          <div class="glass-panel p-4 d-flex flex-column justify-content-between">
+            <div>
+              <h4 class="font-outfit fw-bold text-light mb-1">Activity Log History</h4>
+              <p class="text-secondary font-size-sm mb-3">Your registered reductions</p>
+              
+              <div class="activity-log-feed overflow-y-auto" style="max-height: 300px;" id="activity-log-list">
+                <!-- Injected logs, style list entries beautifully -->
+                <div class="text-center text-secondary py-5 font-size-sm" id="empty-logs-indicator">
+                  No activities logged yet. Fill out the logger to see entries here!
+                </div>
+              </div>
+            </div>
+            
+            <div class="achievement-milestone p-3 glass-panel-sm d-flex align-items-center gap-3 mt-4" id="next-milestone-card">
+              <div class="milestone-icon-wrap bg-emerald-glow p-2 rounded-full">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"/><path d="M12 6V12L16 14"/></svg>
+              </div>
+              <div class="flex-grow-1">
+                <h6 class="font-outfit fw-semibold mb-0" id="milestone-title">Bronze Pioneer</h6>
+                <div class="progress-bar-wrap bg-dark-deep rounded-full overflow-hidden mt-1" style="height: 6px;">
+                  <div class="progress-bar bg-emerald" id="milestone-progress-bar" style="width: 25%"></div>
+                </div>
+                <div class="d-flex justify-content-between font-size-xs text-secondary mt-1">
+                  <span id="milestone-progress-text">Save 50 kg CO₂</span>
+                  <span id="milestone-target-text">Goal: 200 kg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: OFFSETS & NET-ZERO -->
+      <section id="view-offsets" class="content-view">
+        <div class="glass-panel py-3 px-4 mb-4 relative overflow-hidden">
+          <div class="decoration-blur-bg bg-emerald opacity-10" style="top: -50px; right: -50px;"></div>
+          <div class="grid-3 gap-4 align-items-start" id="offset-top-grid">
+            <div class="col-span-2">
+              <h3 class="font-outfit fw-bold text-light mb-1">Offset Simulation & Net-Zero Balance</h3>
+              <p class="text-secondary font-size-sm mb-2">
+                Reduce baseline emissions first, then simulate offset purchases to balance remaining footprint.
+              </p>
+              
+              <div class="net-zero-dashboard-box py-2.5 px-3 glass-panel-sm rounded-lg d-flex flex-column gap-2" style="max-width: 480px;">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-secondary font-size-sm font-jakarta">Your Current Footprint</span>
+                  <span class="font-outfit fw-bold text-light" id="offset-current-footprint">0.00 T / yr</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-secondary font-size-sm font-jakarta">Simulated Offsets Purchased</span>
+                  <span class="font-outfit fw-bold text-cyan" id="offset-purchased-value">0.00 T / yr</span>
+                </div>
+                <div class="divider opacity-10"></div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-light fw-bold font-size-md font-jakarta">Net Balance</span>
+                  <span class="font-outfit fw-extrabold text-emerald font-size-lg" id="offset-net-balance">0.00 T / yr</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Net Zero Seal -->
+            <div class="d-flex flex-column align-items-center text-center justify-content-center h-100 py-2">
+              <div class="net-zero-seal-wrap relative mb-2">
+                <div class="seal-ring" id="seal-ring-anim"></div>
+                <div class="seal-inner d-flex flex-column align-items-center justify-content-center font-outfit" id="seal-content-card">
+                  <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-secondary opacity-40 mb-1" id="seal-lock-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span class="seal-title text-secondary font-size-sm" id="seal-status-title">BALANCE PENDING</span>
+                </div>
+              </div>
+              <p class="font-size-xs text-secondary max-width-250 mx-auto" id="seal-footer-text">
+                Offset 100% of your current footprint to unlock the certified Carbon Neutral status badge.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Grid -->
+        <h4 class="font-outfit fw-bold text-light mb-3">Verified Sustainability Projects</h4>
+        <div class="grid-3 gap-4" id="offset-projects-grid">
+          <!-- Dynamically populated offset cards -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ONBOARDING MODAL -->
+  <div class="modal-overlay d-none align-items-center justify-content-center p-3" id="onboarding-modal">
+    <div class="modal-container glass-panel p-4 p-md-5 max-width-600 relative overflow-hidden flex-grow-1">
+      <div class="decoration-blur-bg bg-emerald opacity-10" style="top: -50px; left: -50px;"></div>
+      
+      <!-- Wizard Progress Header -->
+      <div class="wizard-header d-flex justify-content-between align-items-center mb-4">
+        <span class="wizard-title font-outfit fw-bold text-secondary font-size-sm uppercase tracking-wide">TerraTrace Setup</span>
+        <span class="wizard-step-indicator font-outfit fw-semibold text-emerald" id="wizard-step-indicator">Step 1 of 5</span>
+      </div>
+
+      <!-- Slide Progress Bar -->
+      <div class="progress-bar-wrap bg-dark-deep rounded-full overflow-hidden mb-4" style="height: 4px;">
+        <div class="progress-bar bg-gradient-emerald" id="wizard-progress" style="width: 20%"></div>
+      </div>
+
+      <!-- Form Container -->
+      <form id="onboarding-form">
+        <!-- STEP 1: WELCOME -->
+        <div class="wizard-step active" data-step="1">
+          <h2 class="font-outfit fw-extrabold text-light mb-3">Begin Your Climate Journey</h2>
+          <p class="text-secondary leading-relaxed mb-4">
+            Let's calculate your baseline carbon footprint. It takes 2 minutes and helps generate a personalized carbon reduction plan tailored for you.
+          </p>
+          <div class="welcome-visual-wrap d-flex justify-content-center py-4">
+            <svg viewBox="0 0 200 200" width="160" height="160">
+              <circle cx="100" cy="100" r="80" fill="url(#circleBgGrad)" />
+              <path d="M100 60 C80 90, 80 120, 100 140 C120 120, 120 90, 100 60 Z" fill="url(#leafGradOnboard)" />
+              <path d="M100 75 C90 100, 90 120, 100 135 C110 120, 110 100, 100 75 Z" fill="#ffffff" fill-opacity="0.3" />
+              <circle cx="100" cy="100" r="50" stroke="rgba(255,255,255,0.05)" stroke-width="1.5" fill="none" stroke-dasharray="5 5" />
+              <defs>
+                <linearGradient id="circleBgGrad" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#0F172A" />
+                  <stop offset="1" stop-color="#1E293B" />
+                </linearGradient>
+                <linearGradient id="leafGradOnboard" x1="100" y1="60" x2="100" y2="140" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#10B981" />
+                  <stop offset="1" stop-color="#06B6D4" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn btn-primary px-4 py-3 next-step-btn">Get Started</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: TRANSPORT -->
+        <div class="wizard-step" data-step="2">
+          <h3 class="font-outfit fw-bold text-light mb-2">Transport & Mobility</h3>
+          <p class="text-secondary font-size-sm mb-4">Travel contributes a major portion of personal emissions. Tell us how you commute.</p>
+          
+          <div class="d-flex flex-column gap-4">
+            <!-- Sub-Category: Vehicle -->
+            <div>
+              <div class="d-flex justify-content-between mb-2">
+                <label class="form-label text-light font-size-sm">Weekly Personal Driving</label>
+                <span class="text-cyan font-size-sm fw-semibold" id="val-driving-dist">100 km</span>
+              </div>
+              <input type="range" class="form-range w-100" id="onboard-driving-dist" min="0" max="1000" step="10" value="100">
+              
+              <div class="grid-2 gap-2 mt-2">
+                <div>
+                  <label class="form-label text-secondary font-size-xs">Fuel/Engine Type</label>
+                  <select class="form-select w-100 bg-dark-deep border-secondary p-2 rounded-lg text-light font-size-sm" id="onboard-fuel-type">
+                    <option value="petrol">Petrol (Gasoline)</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="hybrid">Hybrid</option>
+                    <option value="electric">Electric (EV)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label text-secondary font-size-xs">Car Size</label>
+                  <select class="form-select w-100 bg-dark-deep border-secondary p-2 rounded-lg text-light font-size-sm" id="onboard-car-size">
+                    <option value="medium">Medium Sedan</option>
+                    <option value="small">Compact hatchback</option>
+                    <option value="large">SUV / Truck</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-Category: Transit -->
+            <div>
+              <div class="d-flex justify-content-between mb-2">
+                <label class="form-label text-light font-size-sm">Weekly Public Transit (Bus, Train)</label>
+                <span class="text-cyan font-size-sm fw-semibold" id="val-transit-dist">20 km</span>
+              </div>
+              <input type="range" class="form-range w-100" id="onboard-transit-dist" min="0" max="500" step="5" value="20">
+            </div>
+
+            <!-- Sub-Category: Flights -->
+            <div>
+              <div class="d-flex justify-content-between mb-2">
+                <label class="form-label text-light font-size-sm">Annual Air Travel (Flight Hours)</label>
+                <span class="text-cyan font-size-sm fw-semibold" id="val-flight-hours">4 hours</span>
+              </div>
+              <input type="range" class="form-range w-100" id="onboard-flight-hours" min="0" max="100" step="1" value="4">
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-outline-secondary px-4 py-3 prev-step-btn">Back</button>
+            <button type="button" class="btn btn-primary px-4 py-3 next-step-btn">Continue</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: HOUSING & ENERGY -->
+        <div class="wizard-step" data-step="3">
+          <h3 class="font-outfit fw-bold text-light mb-2">Home & Utilities</h3>
+          <p class="text-secondary font-size-sm mb-4">Heating, cooling, and electricity use fuel and generate emissions at home.</p>
+          
+          <div class="d-flex flex-column gap-4">
+            <!-- Household Members -->
+            <div>
+              <label class="form-label text-light font-size-sm mb-2">Number of people in your household</label>
+              <div class="d-flex gap-2" id="household-size-selector">
+                <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge active" data-size="1">1 (Single)</button>
+                <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge" data-size="2">2</button>
+                <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge" data-size="3">3</button>
+                <button type="button" class="btn btn-outline-secondary flex-grow-1 select-badge" data-size="4">4+</button>
+              </div>
+            </div>
+
+            <!-- Energy usage -->
+            <div>
+              <div class="d-flex justify-content-between mb-2">
+                <label class="form-label text-light font-size-sm">Monthly Electricity Bill ($)</label>
+                <span class="text-cyan font-size-sm fw-semibold" id="val-electric-bill">$60</span>
+              </div>
+              <input type="range" class="form-range w-100" id="onboard-electric-bill" min="0" max="500" step="5" value="60">
+              
+              <div class="d-flex align-items-center gap-2 mt-3 glass-panel-sm p-3 rounded-lg">
+                <input type="checkbox" id="onboard-renewable-electricity" style="width: 18px; height: 18px; cursor: pointer;">
+                <label for="onboard-renewable-electricity" class="font-size-sm text-secondary cursor-pointer">We use 100% green/renewable energy electricity</label>
+              </div>
+            </div>
+
+            <!-- Heating Fuel -->
+            <div>
+              <label class="form-label text-light font-size-sm mb-2">Primary Heating Source</label>
+              <select class="form-select w-100 bg-dark-deep border-secondary p-3 rounded-lg text-light font-jakarta font-size-sm" id="onboard-heating-fuel">
+                <option value="gas">Natural Gas</option>
+                <option value="electric">Electricity (Heat Pump/Electric Radiators)</option>
+                <option value="oil">Heating Oil / Diesel</option>
+                <option value="none">No heating used</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-outline-secondary px-4 py-3 prev-step-btn">Back</button>
+            <button type="button" class="btn btn-primary px-4 py-3 next-step-btn">Continue</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: DIET & MEALS -->
+        <div class="wizard-step" data-step="4">
+          <h3 class="font-outfit fw-bold text-light mb-2">Diet & Food Habits</h3>
+          <p class="text-secondary font-size-sm mb-4">Food production, especially beef and dairy, has a massive carbon impact.</p>
+          
+          <div class="d-flex flex-column gap-3">
+            <label class="form-label text-light font-size-sm mb-2">Which best describes your daily diet?</label>
+            
+            <div class="diet-option-card glass-panel-sm p-3 d-flex align-items-center gap-3 active" data-diet="heavy-meat">
+              <input type="radio" name="diet-radio" id="diet-heavy-meat" checked class="form-radio">
+              <div>
+                <label for="diet-heavy-meat" class="fw-bold text-light font-size-sm block cursor-pointer">Meat Lover</label>
+                <span class="text-secondary font-size-xs block">Regularly eat beef, lamb, pork, and dairy.</span>
+              </div>
+            </div>
+
+            <div class="diet-option-card glass-panel-sm p-3 d-flex align-items-center gap-3" data-diet="low-meat">
+              <input type="radio" name="diet-radio" id="diet-low-meat" class="form-radio">
+              <div>
+                <label for="diet-low-meat" class="fw-bold text-light font-size-sm block cursor-pointer">Moderate Meat/Fish</label>
+                <span class="text-secondary font-size-xs block">Rarely eat red meat, consume mostly poultry, fish, and dairy.</span>
+              </div>
+            </div>
+
+            <div class="diet-option-card glass-panel-sm p-3 d-flex align-items-center gap-3" data-diet="vegetarian">
+              <input type="radio" name="diet-radio" id="diet-vegetarian" class="form-radio">
+              <div>
+                <label for="diet-vegetarian" class="fw-bold text-light font-size-sm block cursor-pointer">Vegetarian</label>
+                <span class="text-secondary font-size-xs block">No meat or fish. Consume eggs and dairy.</span>
+              </div>
+            </div>
+
+            <div class="diet-option-card glass-panel-sm p-3 d-flex align-items-center gap-3" data-diet="vegan">
+              <input type="radio" name="diet-radio" id="diet-vegan" class="form-radio">
+              <div>
+                <label for="diet-vegan" class="fw-bold text-light font-size-sm block cursor-pointer">Vegan</label>
+                <span class="text-secondary font-size-xs block">100% plant-based. No animal products whatsoever.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-outline-secondary px-4 py-3 prev-step-btn">Back</button>
+            <button type="button" class="btn btn-primary px-4 py-3 next-step-btn">Continue</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: CONSUMPTION & WASTE -->
+        <div class="wizard-step" data-step="5">
+          <h3 class="font-outfit fw-bold text-light mb-2">Consumption & Waste</h3>
+          <p class="text-secondary font-size-sm mb-4">Purchasing new products and disposal habits contribute to global industrial emissions.</p>
+          
+          <div class="d-flex flex-column gap-4">
+            <!-- Shopping Intensity -->
+            <div>
+              <label class="form-label text-light font-size-sm mb-2">How frequently do you buy new goods (clothes, electronics, furniture)?</label>
+              <select class="form-select w-100 bg-dark-deep border-secondary p-3 rounded-lg text-light font-jakarta font-size-sm" id="onboard-shopping-level">
+                <option value="average">Average (Occasional purchases when needed)</option>
+                <option value="low">Minimalist (Very rarely buy new, prefer secondhand)</option>
+                <option value="high">Avid Consumer (Regular shopping, love new tech/fashion)</option>
+              </select>
+            </div>
+
+            <!-- Recycling -->
+            <div>
+              <label class="form-label text-light font-size-sm mb-2">What is your household recycling habit?</label>
+              <select class="form-select w-100 bg-dark-deep border-secondary p-3 rounded-lg text-light font-jakarta font-size-sm" id="onboard-recycling-level">
+                <option value="some">Recycle some materials (paper, cans)</option>
+                <option value="most">Recycle almost everything (glass, plastic, paper, compost)</option>
+                <option value="none">Rarely recycle</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-5">
+            <button type="button" class="btn btn-outline-secondary px-4 py-3 prev-step-btn">Back</button>
+            <button type="submit" class="btn btn-emerald px-4 py-3" id="submit-onboard-btn">Complete & View Dashboard</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- AI INSIGHTS MODAL -->
+  <div class="modal-overlay d-none align-items-center justify-content-center p-3" id="ai-insights-modal">
+    <div class="modal-container glass-panel p-4 p-md-5 max-width-600 relative overflow-hidden flex-grow-1">
+      <div class="decoration-blur-bg bg-cyan opacity-10" style="top: -50px; right: -50px;"></div>
+      
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-2">
+          <div class="ai-sparkle-icon-container bg-cyan-glow p-2 rounded-lg">
+            <svg class="ai-sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20" style="color: var(--cyan);"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          </div>
+          <h3 class="font-outfit fw-bold text-light mb-0">TerraTrace AI Consultation</h3>
+        </div>
+        <button class="btn btn-outline-secondary p-1 rounded-full border-none" id="close-ai-modal-btn">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Main Modal Content -->
+      <div class="ai-modal-body d-flex flex-column gap-4">
+        
+        <!-- ANALYSIS STATUS & OUTPUT AREA -->
+        <div class="ai-output-container glass-panel-sm p-4 rounded-lg d-flex flex-column gap-3" style="min-height: 280px; max-height: 400px; overflow-y: auto;">
+          <!-- Loading Stage -->
+          <div id="ai-loading-stage" class="d-none flex-column align-items-center justify-content-center py-5 text-center gap-3">
+            <div class="ai-avatar-pulse">
+              <svg class="ai-sparkle-icon text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="40" height="40"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </div>
+            <div>
+              <h5 class="font-outfit fw-bold text-light mb-1">Analyzing Carbon Profile...</h5>
+              <span class="text-secondary font-size-xs" id="ai-loading-detail">Feeding credentials to backend model...</span>
+            </div>
+          </div>
+
+          <!-- Output Display -->
+          <div id="ai-output-stage" class="d-none text-light font-jakarta font-size-xs leading-relaxed">
+            <div class="d-flex justify-content-end align-items-center border-bottom border-secondary pb-2 mb-3">
+              <span class="text-secondary font-size-xs">Secure Server Analysis</span>
+            </div>
+            <!-- Typewriter output content goes here -->
+            <div id="ai-report-body" class="markdown-body" style="white-space: pre-wrap;">
+              <!-- Typed recommendations -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Code Bundle -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
