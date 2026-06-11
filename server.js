@@ -104,7 +104,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Fallback all routes to index.html (useful for Single Page Apps)
-app.get('*', (req, res) => {
+app.get('*all', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
