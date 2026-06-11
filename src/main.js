@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     projSlider.addEventListener('input', (e) => {
       state.projectionYears = parseInt(e.target.value);
       projLabel.textContent = `${state.projectionYears} ${state.projectionYears === 1 ? 'Year' : 'Years'}`;
-      renderApp();
+      updateProjectionImpactOnly();
       saveState();
     });
   }
@@ -324,6 +324,14 @@ function initOnboardingWizard() {
     state.onboardingInputs.heatingFuel = document.getElementById('onboard-heating-fuel').value;
     state.onboardingInputs.shoppingLevel = document.getElementById('onboard-shopping-level').value;
     state.onboardingInputs.recyclingLevel = document.getElementById('onboard-recycling-level').value;
+
+    const checkedDiet = document.querySelector('input[name="diet-radio"]:checked');
+    if (checkedDiet) {
+      const card = checkedDiet.closest('.diet-option-card');
+      if (card) {
+        state.onboardingInputs.dietType = card.dataset.diet;
+      }
+    }
 
     // Set complete
     state.onboardingComplete = true;
@@ -598,55 +606,9 @@ function renderApp() {
   // 2. Render Donut Chart
   renderDonutChart();
 
-  // 3. Render Eco Impact Stat Cards (with Projection Slider)
-  const projectionYears = state.projectionYears || 5;
+  // 3. Render Eco Impact Stat Cards (with Projection Simulator)
   document.getElementById('impact-co2-saved').textContent = `${Math.round(loggedSavingsKg)} kg`;
-  
-  const totalAnnualSavingsKg = loggedSavingsKg + (committedTons * 1000);
-  const projectedSavingsKg = totalAnnualSavingsKg * projectionYears;
-  
-  const treeCount = Math.floor(projectedSavingsKg / 22);
-  const flightEquivalent = (projectedSavingsKg / 90).toFixed(1);
-  
-  let equivText = '';
-  if (projectedSavingsKg === 0) {
-    equivText = `Log activities or commit to challenges to project your forest growth over <strong>${projectionYears} years</strong>. 🌲`;
-  } else {
-    equivText = `Over <strong>${projectionYears} years</strong>, your actions will prevent <strong>${Math.round(projectedSavingsKg)} kg CO₂e</strong>, equivalent to growing <strong>${treeCount} mature trees</strong>, or skipping <strong>${flightEquivalent} hours</strong> of flight time. 🌲`;
-  }
-  document.getElementById('equivalency-text').innerHTML = equivText;
-
-  // Render text-based metrics instead of forest images/seedling icons
-  const visualizerContainer = document.getElementById('impact-visualizer');
-  visualizerContainer.innerHTML = '';
-  visualizerContainer.className = 'w-100 mt-2 d-flex flex-column gap-2 text-secondary font-size-xs';
-
-  if (projectedSavingsKg > 0) {
-    const trees = treeCount;
-    const flights = flightEquivalent;
-    const homes = Math.round(projectedSavingsKg / 8.5);
-    
-    visualizerContainer.innerHTML = `
-      <div class="d-flex justify-content-between border-bottom pb-1 opacity-80" style="border-color: rgba(255, 255, 255, 0.08) !important;">
-        <span>Forestry Equivalent:</span>
-        <span class="text-emerald fw-bold">${trees} mature trees</span>
-      </div>
-      <div class="d-flex justify-content-between border-bottom pb-1 opacity-80" style="border-color: rgba(255, 255, 255, 0.08) !important;">
-        <span>Aviation Offset:</span>
-        <span class="text-cyan fw-bold">${flights} flight hours</span>
-      </div>
-      <div class="d-flex justify-content-between pb-1 opacity-80">
-        <span>Household Power Saved:</span>
-        <span class="text-amber fw-bold">${homes} days electricity</span>
-      </div>
-    `;
-  } else {
-    visualizerContainer.innerHTML = `
-      <div class="text-center py-4 opacity-60 font-size-xs font-jakarta">
-        Log activities or commit to challenges to project your utility and forestry equivalents over time.
-      </div>
-    `;
-  }
+  updateProjectionImpactOnly();
 
   // Helper for hybrid country colors
   const getCountryColorClass = (val) => {
@@ -885,18 +847,18 @@ function renderActivityLogsFeed() {
 
   state.completedLogs.forEach(log => {
     const logItem = document.createElement('div');
-    logItem.className = 'activity-item d-flex justify-content-between align-items-center py-3';
+    logItem.className = 'activity-item d-flex justify-content-between align-items-center mb-3 p-3 glass-panel-sm rounded-lg';
     
     // icon helper
     let iconSvg = '';
     if (log.category === 'food') {
-      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald" aria-hidden="true"><path d="M12 2v2M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
     } else if (log.category === 'transport') {
-      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-cyan"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 .6.4 1 1 1h2"/></svg>';
+      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-cyan" aria-hidden="true"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 .6.4 1 1 1h2"/></svg>';
     } else if (log.category === 'energy') {
-      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-amber"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
+      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-amber" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
     } else {
-      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-purple"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>';
+      iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" class="text-purple" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>';
     }
 
     logItem.innerHTML = `
@@ -911,8 +873,8 @@ function renderActivityLogsFeed() {
       </div>
       <div class="text-right d-flex align-items-center gap-2">
         <span class="font-outfit fw-extrabold text-emerald font-size-sm">-${log.savings} kg</span>
-        <button class="btn btn-outline-secondary p-1 rounded-full border-none opacity-40 hover-opacity-100" onclick="deleteLogEntry('${log.id}')" title="Delete entry">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <button class="btn btn-outline-secondary p-1 rounded-full border-none opacity-40 hover-opacity-100" onclick="deleteLogEntry('${log.id}')" title="Delete entry" aria-label="Delete activity log">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       </div>
     `;
@@ -1010,7 +972,7 @@ function renderOffsetsView(remainingFootprint, totalOffsetsTons, netFootprint) {
     sealTitle.classList.remove('text-secondary');
     
     // Change lock icon to checkmark
-    sealLockIcon.outerHTML = `<svg id="seal-lock-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald mb-1"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>`;
+    sealLockIcon.outerHTML = `<svg id="seal-lock-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald mb-1" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>`;
     
     sealFooterText.innerHTML = '<span class="text-emerald fw-bold">Congratulations!</span> You have simulated enough carbon offsets to offset your operational emissions.';
   } else {
@@ -1024,7 +986,7 @@ function renderOffsetsView(remainingFootprint, totalOffsetsTons, netFootprint) {
     // Restore lock icon
     const existingLockIcon = document.getElementById('seal-lock-icon');
     if (existingLockIcon) {
-      existingLockIcon.outerHTML = `<svg id="seal-lock-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-secondary opacity-40 mb-1"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+      existingLockIcon.outerHTML = `<svg id="seal-lock-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-secondary opacity-40 mb-1" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
     }
 
     sealFooterText.textContent = 'Offset 100% of your remaining annual footprint to unlock the certified Carbon Neutral status badge.';
@@ -1056,12 +1018,12 @@ function renderOffsetsView(remainingFootprint, totalOffsetsTons, netFootprint) {
         <div class="divider opacity-10 mb-3"></div>
         <div class="d-flex justify-content-between align-items-center mb-2">
           <label for="slider-${project.id}" class="font-size-xs text-secondary">Purchase simulated credits</label>
-          <span class="font-outfit fw-extrabold text-cyan font-size-sm">${purchasedValue.toFixed(1)} Tons</span>
+          <span class="font-outfit fw-extrabold text-cyan font-size-sm" id="label-tons-${project.id}">${purchasedValue.toFixed(1)} Tons</span>
         </div>
         <input type="range" id="slider-${project.id}" class="form-range w-100 offset-slider" data-proj-id="${project.id}" min="0" max="10" step="0.5" value="${purchasedValue}">
         <div class="d-flex justify-content-between font-size-xs text-secondary mt-1">
           <span>0T</span>
-          <span>Cost: <strong class="text-light">$${(purchasedValue * project.costPerTon).toFixed(0)}</strong></span>
+          <span>Cost: <strong class="text-light" id="label-cost-${project.id}">$${(purchasedValue * project.costPerTon).toFixed(0)}</strong></span>
           <span>10T</span>
         </div>
       </div>
@@ -1078,8 +1040,15 @@ function renderOffsetsView(remainingFootprint, totalOffsetsTons, netFootprint) {
       const val = parseFloat(e.target.value);
       state.offsets[projId] = val;
       
+      // Update specific DOM labels directly instead of rebuilding entire DOM grid
+      const project = OFFSET_PROJECTS.find(p => p.id === projId);
+      const tonsLabel = document.getElementById(`label-tons-${projId}`);
+      const costLabel = document.getElementById(`label-cost-${projId}`);
+      if (tonsLabel) tonsLabel.textContent = `${val.toFixed(1)} Tons`;
+      if (costLabel) costLabel.textContent = `$${(val * project.costPerTon).toFixed(0)}`;
+
+      updateOffsetCalculationsOnly();
       saveState();
-      renderApp();
     });
   });
 }
@@ -1189,8 +1158,18 @@ function initAIInsightsModal() {
   }
 }
 
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function formatMarkdown(text) {
-  let formatted = text
+  const escaped = escapeHTML(text || '');
+  let formatted = escaped
     .replace(/### (.*?)(?=\n|$)/g, '<h5 class="font-outfit fw-bold text-cyan mt-3 mb-2">$1</h5>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-emerald">$1</strong>')
     .replace(/- (.*?)(?=\n|$)/g, '<li class="ml-4 list-disc font-size-xs text-secondary mb-1">$1</li>')
@@ -1373,16 +1352,143 @@ Your **Lifestyle & Buying Habits** (${footprint.consumption.toFixed(1)} T CO₂e
       // Render the complete sub-string so the browser's parser correctly encapsulates text inside tags
       reportBody.innerHTML = formattedHtml.substring(0, i);
       
+      if (i % 5 === 0) {
+        const parent = document.querySelector('.ai-output-container');
+        if (parent) {
+          parent.scrollTop = parent.scrollHeight;
+        }
+      }
+    } else {
+      clearInterval(typeTimer);
       const parent = document.querySelector('.ai-output-container');
       if (parent) {
         parent.scrollTop = parent.scrollHeight;
       }
-    } else {
-      clearInterval(typeTimer);
     }
-  }, 8);
+  }, 20);
+}
+
+// Helper functions for lightweight DOM updates
+function updateProjectionImpactOnly() {
+  let annualCommittedSavingsKg = 0;
+  state.committedActions.forEach(id => {
+    const act = REDUCTION_ACTIONS.find(a => a.id === id);
+    if (act) annualCommittedSavingsKg += act.savings;
+  });
+
+  let loggedSavingsKg = 0;
+  state.completedLogs.forEach(log => {
+    loggedSavingsKg += log.savings;
+  });
+
+  const committedTons = annualCommittedSavingsKg / 1000;
+  const projectionYears = state.projectionYears || 5;
+  const totalAnnualSavingsKg = loggedSavingsKg + (committedTons * 1000);
+  const projectedSavingsKg = totalAnnualSavingsKg * projectionYears;
+  
+  const treeCount = Math.floor(projectedSavingsKg / 22);
+  const flightEquivalent = (projectedSavingsKg / 90).toFixed(1);
+  
+  let equivText = '';
+  if (projectedSavingsKg === 0) {
+    equivText = `Log activities or commit to challenges to project your forest growth over <strong>${projectionYears} years</strong>. 🌲`;
+  } else {
+    equivText = `Over <strong>${projectionYears} years</strong>, your actions will prevent <strong>${Math.round(projectedSavingsKg)} kg CO₂e</strong>, equivalent to growing <strong>${treeCount} mature trees</strong>, or skipping <strong>${flightEquivalent} hours</strong> of flight time. 🌲`;
+  }
+  
+  const equivalencyTextEl = document.getElementById('equivalency-text');
+  if (equivalencyTextEl) {
+    equivalencyTextEl.innerHTML = equivText;
+  }
+
+  const visualizerContainer = document.getElementById('impact-visualizer');
+  if (visualizerContainer) {
+    visualizerContainer.innerHTML = '';
+    visualizerContainer.className = 'w-100 mt-2 d-flex flex-column gap-2 text-secondary font-size-xs';
+
+    if (projectedSavingsKg > 0) {
+      const trees = treeCount;
+      const flights = flightEquivalent;
+      const homes = Math.round(projectedSavingsKg / 8.5);
+      
+      visualizerContainer.innerHTML = `
+        <div class="d-flex justify-content-between border-bottom pb-1 opacity-80" style="border-color: rgba(255, 255, 255, 0.08) !important;">
+          <span>Forestry Equivalent:</span>
+          <span class="text-emerald fw-bold">${trees} mature trees</span>
+        </div>
+        <div class="d-flex justify-content-between border-bottom pb-1 opacity-80" style="border-color: rgba(255, 255, 255, 0.08) !important;">
+          <span>Aviation Offset:</span>
+          <span class="text-cyan fw-bold">${flights} flight hours</span>
+        </div>
+        <div class="d-flex justify-content-between pb-1 opacity-80">
+          <span>Household Power Saved:</span>
+          <span class="text-amber fw-bold">${homes} days electricity</span>
+        </div>
+      `;
+    } else {
+      visualizerContainer.innerHTML = `
+        <div class="text-center py-4 opacity-60 font-size-xs font-jakarta">
+          Log activities or commit to challenges to project your utility and forestry equivalents over time.
+        </div>
+      `;
+    }
+  }
+}
+
+function updateOffsetCalculationsOnly() {
+  let annualCommittedSavingsKg = 0;
+  state.committedActions.forEach(id => {
+    const act = REDUCTION_ACTIONS.find(a => a.id === id);
+    if (act) annualCommittedSavingsKg += act.savings;
+  });
+
+  const rawFootprint = state.footprint.total;
+  const committedTons = annualCommittedSavingsKg / 1000;
+  const remainingFootprint = Math.max(0, rawFootprint - committedTons);
+  const totalOffsetsTons = Object.values(state.offsets).reduce((acc, curr) => acc + curr, 0);
+  const netFootprint = Math.max(0, remainingFootprint - totalOffsetsTons);
+
+  const purchasedText = document.getElementById('offset-purchased-value');
+  const balanceText = document.getElementById('offset-net-balance');
+  if (purchasedText) purchasedText.textContent = `${totalOffsetsTons.toFixed(2)} T / yr`;
+  if (balanceText) balanceText.textContent = `${netFootprint.toFixed(2)} T / yr`;
+
+  const sealRing = document.getElementById('seal-ring-anim');
+  const sealContent = document.getElementById('seal-content-card');
+  const sealTitle = document.getElementById('seal-status-title');
+  const sealLockIcon = document.getElementById('seal-lock-icon');
+  const sealFooterText = document.getElementById('seal-footer-text');
+
+  if (netFootprint <= 0 && remainingFootprint > 0) {
+    if (sealRing) sealRing.classList.add('active-spinning');
+    if (sealContent) sealContent.classList.add('neutral');
+    if (sealTitle) {
+      sealTitle.textContent = 'NET-ZERO ACTIVE';
+      sealTitle.classList.add('text-emerald');
+      sealTitle.classList.remove('text-secondary');
+    }
+    if (sealLockIcon) {
+      sealLockIcon.outerHTML = `<svg id="seal-lock-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald mb-1" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>`;
+    }
+    if (sealFooterText) {
+      sealFooterText.innerHTML = '<span class="text-emerald fw-bold">Congratulations!</span> You have simulated enough carbon offsets to offset your operational emissions.';
+    }
+  } else {
+    if (sealRing) sealRing.classList.remove('active-spinning');
+    if (sealContent) sealContent.classList.remove('neutral');
+    if (sealTitle) {
+      sealTitle.textContent = 'BALANCE PENDING';
+      sealTitle.classList.remove('text-emerald');
+      sealTitle.classList.add('text-secondary');
+    }
+    if (sealLockIcon) {
+      sealLockIcon.outerHTML = `<svg id="seal-lock-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" class="text-secondary opacity-40 mb-1" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+    }
+    if (sealFooterText) {
+      sealFooterText.textContent = 'Offset 100% of your remaining annual footprint to unlock the certified Carbon Neutral status badge.';
+    }
+  }
 }
 
 // Exports for unit testing
-export { calculateCarbonFootprint, calculateStreak, state };
-
+export { calculateCarbonFootprint, calculateStreak, formatMarkdown, escapeHTML, updateProjectionImpactOnly, updateOffsetCalculationsOnly, state };

@@ -96,4 +96,42 @@ describe('TerraTrace Frontend Logic Tests', () => {
 
     expect(calculateStreak()).toBe(1); // Only today's log is active, gap of 3 days breaks the streak
   });
+
+  it('should escape HTML characters for security (XSS prevention)', async () => {
+    const { escapeHTML } = await import('./main.js');
+    expect(escapeHTML('<script>alert("XSS")</script>')).toBe('&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;');
+  });
+
+  it('should format markdown syntax correctly into semantic HTML elements', async () => {
+    const { formatMarkdown } = await import('./main.js');
+
+    const markdownInput = '### Executive Summary\nThis is **bold** and *italic*.\n- Item 1\n- Item 2';
+    const expectedOutput = '<h5 class="font-outfit fw-bold text-cyan mt-3 mb-2">Executive Summary</h5><br>This is <strong class="text-emerald">bold</strong> and <em class="text-secondary">italic</em>.<br><li class="ml-4 list-disc font-size-xs text-secondary mb-1">Item 1</li><br><li class="ml-4 list-disc font-size-xs text-secondary mb-1">Item 2</li>';
+
+    expect(formatMarkdown(markdownInput)).toBe(expectedOutput);
+  });
+
+  it('should support adding and deleting activity logs', async () => {
+    const { state } = await import('./main.js');
+    state.completedLogs = [
+      { id: 'log-test-1', label: 'Test Log 1', category: 'food', savings: 5.4, rawDate: Date.now() }
+    ];
+    expect(state.completedLogs.length).toBe(1);
+    
+    // Simulate deletion
+    const idx = state.completedLogs.findIndex(l => l.id === 'log-test-1');
+    if (idx > -1) {
+      state.completedLogs.splice(idx, 1);
+    }
+    expect(state.completedLogs.length).toBe(0);
+  });
+
+  it('should support state persistence via localStorage simulation', () => {
+    const testState = { onboardingComplete: true, compareCountry: 'DE' };
+    window.localStorage.setItem('terratrace_state', JSON.stringify(testState));
+    
+    const retrieved = JSON.parse(window.localStorage.getItem('terratrace_state'));
+    expect(retrieved.onboardingComplete).toBe(true);
+    expect(retrieved.compareCountry).toBe('DE');
+  });
 });

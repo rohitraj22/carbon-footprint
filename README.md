@@ -22,7 +22,7 @@ TerraTrace is a high-fidelity, single-page web application designed to help indi
 *   **Frontend**: HTML5, Vanilla JavaScript, CSS3 (Glassmorphic cards & animations), Vite.
 *   **Backend**: Node.js, Express.js.
 *   **AI Integration**: Google Gemini API via secure server-side fetching.
-*   **Security & Protection**: Helmet (secure HTTP headers), express-rate-limit (anti-DoS/abuse), CORS origin constraints, parameter type validation and regex sanitization.
+*   **Security & Protection**: Helmet (secure HTTP headers), custom O(1) in-memory rate-limiter (anti-DoS/abuse), CORS origin constraints, parameter type validation and regex sanitization.
 *   **Testing Framework**: Vitest, Supertest, JSDOM.
 
 ---

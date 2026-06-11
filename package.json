@@ -22,7 +22,6 @@
     "vitest": "^4.1.8"
   },
   "dependencies": {
-    "express-rate-limit": "^8.5.2",
     "helmet": "^8.2.0"
   }
 }
